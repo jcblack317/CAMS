@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fuera de Servicio - En Reparación</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow-y: auto;
+            background-color: gray;
+        }
+        h1{
+            color: red;
+        }
+        .video-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+        .content {
+            position: relative;
+            z-index: 1;
+            color: white;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            min-height: 200vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding-top: 100px;
+        }
+        .text-container {
+            position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+        }
+        .text-box {
+            text-align: center;
+            color: white;
+            font-size: 1.2em;
+            line-height: 1.5em;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 3;
+        }
+        .navbar .logo {
+            color: white;
+            font-size: 1.5em;
+        }
+        .navbar .eyes {
+            display: flex;
+            gap: 10px;
+        }
+        .navbar .social-icons {
+            display: flex;
+            gap: 20px;
+        }
+        .navbar .social-icons a {
+            color: white;
+            font-size: 1.5em;
+            text-decoration: none;
+        }
+        .eye {
+            width: 40px;
+            height: 40px;
+            background-color: white;
+            border-radius: 50%;
+            position: relative;
+        }
+        .pupil {
+            width: 20px;
+            height: 20px;
+            background-color: black;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .title {
+            font-size: 10em;
+            margin: 50px 0;
+            color: red;
+            font-family: 'Arial Black', sans-serif;
+            position: relative;
+            top: 20%;
+            left: -100%;
+            white-space: nowrap;
+            animation: moveRight 10s linear infinite;
+        }
+        @keyframes moveRight {
+            0% {
+                left: -100%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+        footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px 0;
+            text-align: center;
+            color: white;
+            font-size: 0.8em;
+        }
+        footer p {
+            margin: 5px 0;
+        }
+        footer p:first-child {
+            margin-top: 0;
+        }
+        footer p:last-child {
+            margin-bottom: 0;
+        }
+        footer:hover {
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+       
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">Cam Medina</div>
+        <div class="eyes">
+            <div class="eye">
+                <div class="pupil" id="pupil1"></div>
+            </div>
+            <div class="eye">
+                <div class="pupil" id="pupil2"></div>
+            </div>
+        </div>
+        <div class="social-icons">
+            <a href="https://open.spotify.com/user/31h2t5vxbnxd7pyura4ekd2ik33a" target="_blank">🌐</a>
+            <a href="https://www.instagram.com/cc00l_hor00k/" target="_blank">📸</a>
+        </div>
+    </div>
+    
+    <div class="text-container">
+        
+        <div class="text-box">
+            <h1>CAM MEDINA</h1>
+            <p>Cam, una estudiante apasionada, toca la guitarra y disfruta tomar fotos. Le encanta programar  y se siente alegre por como es.</p>
+            <p>Cam está desarrollando sus habilidades en diversos campos, incluyendo la programación, la música y la fotografía.</p>
+            <p>Ella cree firmemente en el poder de la tecnología y el arte como herramientas para la autoexpresión y la conexión con otros.</p>
+            <p>Cam encuentra alegría en descubrir nuevos lugares a través de la fotografía, crear melodías en su guitarra y desarrollar proyectos de programación que desafían su creatividad.</p>
+        </div>
+    </div>
+    
+    <footer>
+        <p>
+            CAMS WEB:<br>
+            |<br>
+           | <br>
+           | <br>
+          | <br>
+            V  
+        </p>
+    </footer>
+    <script>
+        document.addEventListener('mousemove', (e) => {
+            const pupils = document.querySelectorAll('.pupil');
+            pupils.forEach(pupil => {
+                const rect = pupil.getBoundingClientRect();
+                const x = rect.left + rect.width / 2;
+                const y = rect.top + rect.height / 2;
+                const angle = Math.atan2(e.clientY - y, e.clientX - x);
+                const distance = Math.min(10, Math.hypot(e.clientX - x, e.clientY - y));
+                const offsetX = Math.cos(angle) * distance;
+                const offsetY = Math.sin(angle) * distance;
+                pupil.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+            });
+        });
+    </script>
+</body>
+</html>

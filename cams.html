@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página con Video de Fondo</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow-y: auto; /* Permitir el desplazamiento vertical */
+        }
+        h2 {
+            color: red;
+        }
+        .video-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+        .content {
+            position: relative;
+            z-index: 1;
+            color: white;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            min-height: 200vh; /* Aumentar la altura mínima del contenido para permitir el desplazamiento */
+            background-color: rgba(0, 0, 0, 0.5); /* Fondo negro semi-transparente */
+            padding-top: 100px; /* Espacio para la barra de navegación */
+        }
+        .folder-box {
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 2px solid white;
+            padding: 20px;
+            margin: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s, transform 0.3s;
+            position: absolute;
+            left: 50%;
+            top: 60%; /* Ajustar la posición superior */
+            transform: translate(-50%, -50%);
+            border-radius: 8px;
+            overflow: hidden;
+            width: 200px; /* Ancho de las cajas */
+            max-width: 100%; /* Para que no se excedan del ancho de la ventana */
+            user-select: none; /* Evitar la selección de texto al arrastrar */
+            z-index: 2; /* Asegurar que estén por encima del video de fondo */
+        }
+        .folder-box:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 120%;
+            height: 100%;
+            background-color: rgb(214, 152, 107);
+            transform: translateX(-50%);
+            z-index: -1;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+        .folder-box:hover {
+            background-color: white;
+            color: black;
+            transform: scale(1.05); /* Aumentar tamaño al pasar el ratón */
+        }
+        .folder-box h2 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+        .folder-box p {
+            margin: 10px 0 0;
+            font-size: 1em;
+        }
+        /* Estilos para las cajas específicas */
+        .folder-box:nth-child(odd) {
+            top: calc(30% + 20px);
+            left: calc(10% + 20px);
+        }
+        .folder-box:nth-child(even) {
+            top: calc(40% + 20px);
+            right: calc(10% + 20px);
+        }
+        .folder-box:nth-child(3n + 1) {
+            top: calc(50% + 20px);
+            left: calc(50% + 20px);
+        }
+        .folder-box:nth-child(3n + 2) {
+            top: calc(60% + 20px);
+            right: calc(30% + 20px);
+        }
+        .folder-box:nth-child(3n + 3) {
+            top: calc(70% + 20px);
+            left: calc(70% + 20px);
+        }
+        /* Barra de navegación */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 3;
+        }
+        .navbar .logo {
+            color: white;
+            font-size: 1.5em;
+        }
+        .navbar .eyes {
+            display: flex;
+            gap: 10px;
+        }
+        .navbar .social-icons {
+            display: flex;
+            gap: 20px;
+        }
+        .navbar .social-icons a {
+            color: white;
+            font-size: 1.5em;
+            text-decoration: none;
+        }
+        /* Estilos para los ojos */
+        .eye {
+            width: 40px;
+            height: 40px;
+            background-color: white;
+            border-radius: 50%;
+            position: relative;
+        }
+        .pupil {
+            width: 20px;
+            height: 20px;
+            background-color: black;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        /* Estilo para el título */
+        .title {
+            font-size: 10em; /* Tamaño grande para el título */
+            margin: 50px 0;
+            color: red; /* Color rojo para el título */
+            font-family: 'Arial Black', sans-serif; /* Cambio de la fuente */
+            position: relative;
+            top: 20%; /* Ajustar la posición superior para estar encima de las cajas */
+            left: -100%; /* Iniciar fuera de la pantalla a la izquierda */
+            white-space: nowrap; /* Evitar que el título se divida en varias líneas */
+            animation: moveRight 10s linear infinite; /* Animación continua */
+        }
+        @keyframes moveRight {
+            0% {
+                left: -100%; /* Iniciar fuera de la pantalla a la izquierda */
+            }
+            100% {
+                left: 100%; /* Mover fuera de la pantalla a la derecha */
+            }
+        }
+        /* Animación para imágenes */
+        .image-container {
+            position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px; /* Espacio entre imágenes */
+            margin: 50px 0; /* Espacio alrededor del contenedor de imágenes */
+        }
+    
+        .image-box {
+            text-align: center;
+        }
+
+        .image-container img {
+            width: 200px; /* Ancho de las imágenes */
+            height: 200px; /* Altura de las imágenes */
+            object-fit: cover;
+            border-radius: 50%;
+            cursor: pointer;
+            animation: bounce 5s infinite;
+        }
+
+        .image-container p {
+            margin: 10px 0 0;
+            font-size: 1em;
+            color: white;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+         /* Estilos para el footer */
+         footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.8); /* Fondo negro semi-transparente */
+            padding: 20px 0;
+            text-align: center;
+            color: white;
+            font-size: 0.8em;
+           /* z-index: 3; /* Asegurar que esté por encima del contenido */
+        }
+        footer p {
+            margin: 5px 0;
+        }
+        footer p:first-child {
+            margin-top: 0;
+        }
+        footer p:last-child {
+            margin-bottom: 0;
+        }
+        /* Efecto de hover para el footer */
+        footer:hover {
+            background-color: rgba(0, 0, 0, 0.9); /* Aumentar la opacidad al pasar el ratón */
+        }
+    </style>
+</head>
+<body>
+    <video autoplay muted loop class="video-bg">
+        <source src="WhatsApp Video 2024-06-26 at 11.34.51 PM.mp4" type="video/mp4">
+        Tu navegador no soporta la reproducción de videos.
+    </video>
+
+    <div class="navbar">
+        <div class="logo">Cam Medina</div>
+        <div class="eyes">
+            <div class="eye">
+                <div class="pupil" id="pupil1"></div>
+            </div>
+            <div class="eye">
+                <div class="pupil" id="pupil2"></div>
+            </div>
+        </div>
+        <div class="social-icons">
+            <a href="https://open.spotify.com/user/31h2t5vxbnxd7pyura4ekd2ik33a" target="_blank">🌐</a>
+            <a href="https://www.instagram.com/cc00l_hor00k/" target="_blank">📸</a>
+        </div>
+    </div>
+
+    <div class="content">
+        <h1 class="title">CAMS WEB</h1>
+        
+        <div class="folder-box" onclick="location.href='PLANTILLA copy.HTML'" draggable="true">
+            <h2>ANIMATION</h2>
+            <p>aqui ☝️</p>
+        </div>
+        <div class="folder-box" onclick="location.href='PLANTILLA copy 2.HTML'" draggable="true">
+            <h2>FINE ART</h2>
+            <p>•</p>
+        </div>
+        <div class="folder-box" onclick="location.href='PLANTILLA.HTML'" draggable="true">
+            <h2>MUSIC SECTION</h2>
+            <p>The Smiths</p>
+        </div>
+        <div class="folder-box" onclick="location.href='PLANTILLA copy 3.HTML'" draggable="true">
+            <h2>PEQUEÑOS</h2>
+            <p>sisisi</p>
+        </div>
+
+        
+        <div class="image-container">
+            <div class="image-box">
+                <img src="WhatsApp Image 2024-06-26 at 2.01.06 PM.jpeg" alt="Cams Image 1" onclick="location.href='demi.HTML'">
+                <p>acerca de mi</p>
+            </div>
+            <div class="image-box">
+                <img src="oso.png" alt="Cams Image 2" onclick="location.href='nomas.HTML'">
+                
+            </div>
+            <div class="image-box">
+                <img src="WhatsApp Image 2024-06-26 at 2.01.35 PM.jpeg" alt="Cams Image 3" onclick="location.href='https://www.instagram.com/cc00l_hor00k/'">
+                <p>Don’t look in here</p>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p>
+            CAMS WEB:<br>
+            |<br>
+           | <br>
+           | <br>
+          | <br>
+            V  
+        </p>
+    </footer>
+    <script>
+        // Función para manejar el arrastre de las cajas
+        function handleDragStart(e) {
+            this.style.opacity = '0.4';  // Opacidad reducida durante el arrastre
+            e.dataTransfer.setData('text/plain', '');  // Necesario para Firefox
+        }
+
+        function handleDragEnd(e) {
+            this.style.opacity = '1';  // Restaurar la opacidad al finalizar el arrastre
+        }
+
+        // Asignar eventos de arrastre a cada caja
+        const boxes = document.querySelectorAll('.folder-box');
+        boxes.forEach(box => {
+            box.addEventListener('dragstart', handleDragStart);
+            box.addEventListener('dragend', handleDragEnd);
+        });
+
+        // Ojos que siguen el mouse
+        document.addEventListener('mousemove', (e) => {
+            const pupils = document.querySelectorAll('.pupil');
+            pupils.forEach(pupil => {
+                const rect = pupil.getBoundingClientRect();
+                const x = rect.left + rect.width / 2;
+                const y = rect.top + rect.height / 2;
+                const angle = Math.atan2(e.clientY - y, e.clientX - x);
+                const distance = Math.min(10, Math.hypot(e.clientX - x, e.clientY - y));
+                const offsetX = Math.cos(angle) * distance;
+                const offsetY = Math.sin(angle) * distance;
+                pupil.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+            });
+        });
+    </script>
+    
+</body>
+</html>

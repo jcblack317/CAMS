@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fuera de Servicio - En Reparación</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow-y: auto; /* Permitir el desplazamiento vertical */
+            background-color: gray;
+        }
+        .video-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+        .content {
+            position: relative;
+            z-index: 1;
+            color: white;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            min-height: 200vh; /* Aumentar la altura mínima del contenido para permitir el desplazamiento */
+            background-color: rgba(0, 0, 0, 0.5); /* Fondo negro semi-transparente */
+            padding-top: 100px; /* Espacio para la barra de navegación */
+        }
+        .image-container {
+            position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Altura total de la ventana */
+        }
+        .image-box {
+            text-align: center;
+        }
+        .image-container img {
+            width: 400px; /* Ancho fijo para la imagen */
+            height: 400px; /* Altura fija para la imagen */
+            object-fit: cover; /* Ajuste del contenido de la imagen */
+            border-radius: 10px; /* Bordes redondeados */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); /* Sombra */
+        }
+        /* Barra de navegación */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 3;
+        }
+        .navbar .logo {
+            color: white;
+            font-size: 1.5em;
+        }
+        .navbar .eyes {
+            display: flex;
+            gap: 10px;
+        }
+        .navbar .social-icons {
+            display: flex;
+            gap: 20px;
+        }
+        .navbar .social-icons a {
+            color: white;
+            font-size: 1.5em;
+            text-decoration: none;
+        }
+        /* Estilos para los ojos */
+        .eye {
+            width: 40px;
+            height: 40px;
+            background-color: white;
+            border-radius: 50%;
+            position: relative;
+        }
+        .pupil {
+            width: 20px;
+            height: 20px;
+            background-color: black;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        /* Estilo para el título */
+        .title {
+            font-size: 10em; /* Tamaño grande para el título */
+            margin: 50px 0;
+            color: red; /* Color rojo para el título */
+            font-family: 'Arial Black', sans-serif; /* Cambio de la fuente */
+            position: relative;
+            top: 20%; /* Ajustar la posición superior para estar encima de las cajas */
+            left: -100%; /* Iniciar fuera de la pantalla a la izquierda */
+            white-space: nowrap; /* Evitar que el título se divida en varias líneas */
+            animation: moveRight 10s linear infinite; /* Animación continua */
+        }
+        @keyframes moveRight {
+            0% {
+                left: -100%; /* Iniciar fuera de la pantalla a la izquierda */
+            }
+            100% {
+                left: 100%; /* Mover fuera de la pantalla a la derecha */
+            }
+        }
+
+        /* Estilos para el footer */
+        footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.8); /* Fondo negro semi-transparente */
+            padding: 20px 0;
+            text-align: center;
+            color: white;
+            font-size: 0.8em;
+        }
+        footer p {
+            margin: 5px 0;
+        }
+        footer p:first-child {
+            margin-top: 0;
+        }
+        footer p:last-child {
+            margin-bottom: 0;
+        }
+        /* Efecto de hover para el footer */
+        footer:hover {
+            background-color: rgba(0, 0, 0, 0.9); /* Aumentar la opacidad al pasar el ratón */
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">Cam Medina</div>
+        <div class="eyes">
+            <div class="eye">
+                <div class="pupil" id="pupil1"></div>
+            </div>
+            <div class="eye">
+                <div class="pupil" id="pupil2"></div>
+            </div>
+        </div>
+        <div class="social-icons">
+            <a href="https://open.spotify.com/user/31h2t5vxbnxd7pyura4ekd2ik33a" target="_blank">🌐</a>
+            <a href="https://www.instagram.com/cc00l_hor00k/" target="_blank">📸</a>
+        </div>
+    </div>
+    
+    <div class="image-container">
+        <div class="image-box">
+            <img src="camp.jpg" alt="Imagen de muestra">
+        </div>
+    </div>
+    
+    <footer>
+        <p>
+            CAMS WEB:<br>
+            |<br>
+           | <br>
+           | <br>
+          | <br>
+            V  
+        </p>
+    </footer>
+    <script>
+        // Ojos que siguen el mouse
+        document.addEventListener('mousemove', (e) => {
+            const pupils = document.querySelectorAll('.pupil');
+            pupils.forEach(pupil => {
+                const rect = pupil.getBoundingClientRect();
+                const x = rect.left + rect.width / 2;
+                const y = rect.top + rect.height / 2;
+                const angle = Math.atan2(e.clientY - y, e.clientX - x);
+                const distance = Math.min(10, Math.hypot(e.clientX - x, e.clientY - y));
+                const offsetX = Math.cos(angle) * distance;
+                const offsetY = Math.sin(angle) * distance;
+                pupil.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+            });
+        });
+    </script>
+</body>
+</html>
